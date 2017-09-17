@@ -5,7 +5,7 @@ const initialState = {
   uris: {}
 };
 
-const imageOfflineReducer = (state = initialState, action) => {
+const offlineImageReducer = (state = initialState, action) => {
   switch (action.type) {
     case OFFLINE_IMAGES.DOWNLOAD_IMAGE_OFFLINE_SUCCESS:
       return {
@@ -16,7 +16,7 @@ const imageOfflineReducer = (state = initialState, action) => {
         }
       };
     case REHYDRATE:
-      const rehydratedState = action.payload.imageOfflineReducer;
+      const rehydratedState = action.payload.offlineImageReducer;
       if (rehydratedState) {
         return {
           ...state,
@@ -29,4 +29,4 @@ const imageOfflineReducer = (state = initialState, action) => {
   }
 };
 
-export default imageOfflineReducer;
+export default offlineImageReducer;

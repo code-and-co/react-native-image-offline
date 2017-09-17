@@ -11,10 +11,11 @@ const FILE_PREFIX = Platform.OS === 'ios' ? '' : 'file://';
  * Wrapper class for React Image {@link https://facebook.github.io/react-native/docs/image.html}.
  * This component can get or observe the cached image's device file path as source path.
  */
-class ImageOffline extends React.Component {
+class OfflineImage extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log('ImageOffline', 'constructor');
   }
 
   componentWillMount() {
@@ -78,11 +79,11 @@ class ImageOffline extends React.Component {
 
 }
 
-ImageOffline.defaultProps = {
+OfflineImage.defaultProps = {
   reloadImage: 'always'
 };
 
-ImageOffline.propTypes = {
+OfflineImage.propTypes = {
   //fallbackSource: PropTypes.int,
   component: PropTypes.func,
   // TODO: Boolean would be sufficient
@@ -90,11 +91,11 @@ ImageOffline.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  uris: state.imageOfflineReducer.uris,
+  uris: state.offlineImageReducer.uris,
 });
 
 const mapStateToDispatch = (dispatch) => ({
   downloadImageOffline: (source) => dispatch(downloadImageOffline(source)),
 });
 
-export default connect(mapStateToProps, mapStateToDispatch)(ImageOffline);
+export default connect(mapStateToProps, mapStateToDispatch)(OfflineImage);

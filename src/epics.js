@@ -19,12 +19,13 @@ const defaultTimeout = 5000;
 const downloadImageEpic = (action$, store) =>
   action$.ofType(OFFLINE_IMAGES.DOWNLOAD_IMAGE_OFFLINE)
     .flatMap(action => {
-      //console.log('downloadImage', 'Entry');
-      //console.log('downloadImage', action.payload);
-      if (!store.getState().networkReducer.isConnected) {
-        //console.log('downloadImage', 'Network not connected');
-        return Observable.of(downloadImageOfflineNetworkError());
-      }
+      console.log('downloadImage', 'Entry');
+      console.log('downloadImage', action.payload);
+      // TODO: Replace NetInfo
+//      if (!store.getState().networkReducer.isConnected) {
+//        console.log('downloadImage', 'Network not connected');
+//        return Observable.of(downloadImageOfflineNetworkError());
+//      }
 
       const source = action.payload;
 
@@ -37,10 +38,10 @@ const downloadImageEpic = (action$, store) =>
         })
         .fetch(method, source.uri, source.headers)
         .then(() => {
-          //console.log('RNFetchBlob', 'success', imageFilePath, source.uri);
+          console.log('RNFetchBlob', 'success', imageFilePath, source.uri);
           store.dispatch(downloadImageOfflineSuccess(source.uri, imageFilePath));
         }).catch(() => {
-          //console.log('RNFetchBlob', 'failure', imageFilePath, source.uri);
+          console.log('RNFetchBlob', 'failure', imageFilePath, source.uri);
           RNFetchBlob.fs.unlink(imageFilePath);
           store.dispatch(downloadImageOfflineFailure());
       });
@@ -51,6 +52,5 @@ const downloadImageEpic = (action$, store) =>
 
     });
 
-export default { downloadImageEpic, };
+export default downloadImageEpic;
 
-export const imageOfflineEpics = [downloadImageEpic];
