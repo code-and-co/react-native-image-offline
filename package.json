@@ -20,11 +20,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-fetch-blob": "0.10.*",
-    "redux": "3.*",
-    "react-redux": "*",
-    "redux-observable": "*",
-    "redux-persist": "*"
+    "react-native-fetch-blob": "0.10.*"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1"

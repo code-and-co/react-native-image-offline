@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-native start",
     "clean-ios": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/* && rm -rf node_modules/ && yarn cache clean && yarn install",
-    "android": "react-native run-android",
+    "droid": "react-native run-android",
     "ios": "react-native run-ios",
     "clean-droid": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf android/build/* && rm -rf node_modules/ && yarn cache clean && yarn install",
     "test": "node node_modules/jest/bin/jest.js --watch"
@@ -17,13 +17,7 @@
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.0",
     "react-native-fetch-blob": "^0.10.8",
-    "react-native-image-offline": "file:../..",
-    "react-redux": "^5.0.6",
-    "redux": "^3.7.2",
-    "redux-logger": "^3.0.6",
-    "redux-observable": "^0.16.0",
-    "redux-persist": "^4.9.1",
-    "rxjs": "^5.4.3"
+    "react-native-image-offline": "file:../.."
   },
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",

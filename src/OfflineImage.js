@@ -1,22 +1,31 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ImageBackground, Platform } from 'react-native';
 
-import { downloadImageOffline } from './actions';
+import offlineImageStore from './OfflineImageStore';
 
 const FILE_PREFIX = Platform.OS === 'ios' ? '' : 'file://';
 
 /**
  * Wrapper class for React Image {@link https://facebook.github.io/react-native/docs/image.html}.
- * This component can get or observe the cached image's device file path as source path.
+ * This component can get the cached image's device file path as source path.
  */
 class OfflineImage extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log('ImageOffline', 'constructor');
+    this.state = {
+      path: undefined,
+    };
   }
+
+  /**
+   * Callback function triggered after image downloaded or if already exist in offline store
+   */
+  handler = (path) => {
+    console.log('Comp: handler', path);
+    this.setState({ path });
+  };
 
   componentWillMount() {
     /**
@@ -29,35 +38,34 @@ class OfflineImage extends React.Component {
 
     // TODO: check source type as 'ImageURISource'
     // Download only if property 'uri' exists
-    if (source.uri && reloadImage === 'always') {
-      this.props.downloadImageOffline(source);
+    if (source.uri) {
+      // Get image offline path if already exist else it returns undefined
+      const offlinePath = offlineImageStore.getImageOfflinePath(source.uri);
+      this.setState({ path: offlinePath });
+
+      // Subscribe so that we can re-render once image downloaded!
+      offlineImageStore.subscribe(source, this.handler, reloadImage);
+      console.log('Comp: Subscribe', source);
     }
   }
 
-  /**
-   * Check whether given uri already exist in our offline cache!
-   * @param uris Offline cached image uris
-   * @param uri uri to check in offline cache list
-   */
-  isExistOffline = (uris, uri) => {
-    return uris !== undefined && uris[uri] !== undefined;
-  };
-
   // this.props.fallBackSource // Show default image as fallbackImage(If exist) until actual image has been loaded.
   render() {
-    const { uris, fallbackSource, source, component } = this.props;
+    const { fallbackSource, source, component } = this.props;
     let sourceImage = source;
 
     // Replace source.uri with offline image path instead waiting for image to download from server
     if (source.uri) {
-      if (this.isExistOffline(uris, source.uri)) {
+      if (this.state.path) {
         sourceImage = {
-          uri: FILE_PREFIX + uris[source.uri],
+          uri: FILE_PREFIX + this.state.path,
         };
       } else if (fallbackSource) { // Show fallback image until we download actual image
         sourceImage = fallbackSource;
       }
     }
+
+    console.log('Render: sourceImage', sourceImage);
 
     const componentProps = {
       ...this.props,
@@ -79,23 +87,10 @@ class OfflineImage extends React.Component {
 
 }
 
-OfflineImage.defaultProps = {
-  reloadImage: 'always'
-};
-
 OfflineImage.propTypes = {
   //fallbackSource: PropTypes.int,
   component: PropTypes.func,
-  // TODO: Boolean would be sufficient
-  reloadImage: PropTypes.string, // 'always', 'never'
+  reloadImage: PropTypes.bool,
 };
 
-const mapStateToProps = (state) => ({
-  uris: state.offlineImageReducer.uris,
-});
-
-const mapStateToDispatch = (dispatch) => ({
-  downloadImageOffline: (source) => dispatch(downloadImageOffline(source)),
-});
-
-export default connect(mapStateToProps, mapStateToDispatch)(OfflineImage);
+export default OfflineImage;
