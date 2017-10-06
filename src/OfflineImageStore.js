@@ -2,6 +2,10 @@ import { AsyncStorage } from 'react-native';
 import RNFetchBlob from 'react-native-fetch-blob';
 const SHA1 = require('crypto-js/sha1');
 
+/**
+ * Primary class responsible with all operations required to communicate with Offline Store!
+ *
+ */
 class OfflineImageStore {
 
   constructor() {
@@ -21,9 +25,8 @@ class OfflineImageStore {
   }
 
   restore = async (config, onCompletion) => {
-
     if (config.name === undefined || config.name.length === 0) {
-      throw 'Offline image store is missing';
+      throw 'Offline image store name is missing';
     }
 
     this.name = config.name;
@@ -52,8 +55,11 @@ class OfflineImageStore {
   };
 
   getImageOfflinePath = (uri) => {
-    console.log('getImageOfflinePath', this.entries[uri].localUriPath);
-    return this.entries[uri].localUriPath;
+    if (this.entries[uri]) {
+      console.log('getImageOfflinePath', this.entries[uri].localUriPath);
+      return this.entries[uri].localUriPath;
+    }
+    return undefined;
   };
 
   getBaseDir = () => {
@@ -108,6 +114,26 @@ class OfflineImageStore {
     return RNFetchBlob.fs.unlink(this.getBaseDir());
   }
 
+  preLoad = async (uris) => {
+    // Get existing store entries
+    //console.log('before restore', JSON.stringify(this.entries));
+    if (Object.keys(this.entries).length === 0) {
+      const existingUris = await AsyncStorage.getItem(`@${this.name}:uris`);
+      Object.assign(this.entries, JSON.parse(existingUris));
+    }
+
+    if (uris === undefined && !Array.isArray(uris)) {
+      throw 'uris should not be undefined and should be array type';
+    }
+    uris.forEach((uri) => {
+      // If image not exist already, then download
+      if (!this.entries[uri]) {
+        this._downloadImage({'uri': uri});
+      }
+    });
+
+  };
+
   _downloadImage = (source) => {
     console.log('_downloadImage , now entries', JSON.stringify(this.entries));
 
@@ -125,6 +151,9 @@ class OfflineImageStore {
         // Persist entries to AsyncStorage for offline
         this._updateOfflineStore(source.uri).done();
         console.log('AsyncStorage.setItem', JSON.stringify(this.entries));
+
+        // Notify subscribed handler
+        this._notify(source.uri);
 
       }).catch(() => {
       console.log('RNFetchBlob', 'failure', imageFilePath, source.uri);
