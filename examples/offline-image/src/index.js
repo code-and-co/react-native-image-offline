@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, ScrollView, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { OfflineImage, OfflineImageStore } from 'react-native-image-offline';
 import Images from '@assets/images';
 
@@ -10,37 +10,42 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       reStoreCompleted: false,
+      loadImages: false,
     };
   }
 
   componentWillMount() {
     OfflineImageStore.restore({
       name: 'My_Image_gallery',
-      imageRemoveTimeout: 259200 // expire image after 3 days
+      imageRemoveTimeout: 120, // expire image after 120 seconds, default is 3 days if you don't provide this property.
     }, () => {
-      console.log('Restore completed!');
+      console.log('Restore completed and callback called !');
       // Restore completed!!
       this.setState({ reStoreCompleted: true });
-    });
 
-    // Preload images
-    OfflineImageStore.preLoad([
-      'https://wallpaperbrowse.com/media/images/mobileswall-047.jpg',
-      'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg',
-      'https://wallpaperbrowse.com/media/images/tvrcnkbcgeirbxcmsbfz.jpg',
-      'https://wallpaperbrowse.com/media/images/hd-wallpapers-1080p-for-mobile-2015.jpg',
-      'https://wallpaperbrowse.com/media/images/mobileswall-043.jpg',
-      'https://wallpaperbrowse.com/media/images/hd-wallpapers-for-mobile-2015.png',
-      'https://wallpaperbrowse.com/media/images/download_ZNNDLIt.jpg'
-    ]);
+      // Preload images
+      // Note: We recommend call this method on `restore` completion!
+      OfflineImageStore.preLoad([
+        'https://wallpaperbrowse.com/media/images/mobileswall-047.jpg',
+        'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg',
+        'https://wallpaperbrowse.com/media/images/tvrcnkbcgeirbxcmsbfz.jpg',
+        'https://wallpaperbrowse.com/media/images/hd-wallpapers-1080p-for-mobile-2015.jpg',
+        'https://wallpaperbrowse.com/media/images/mobileswall-043.jpg',
+        'https://wallpaperbrowse.com/media/images/hd-wallpapers-for-mobile-2015.png',
+        'https://wallpaperbrowse.com/media/images/download_ZNNDLIt.jpg'
+      ]);
+    });
   }
 
+  /**
+   * This is just testing logic to show `removeExpiredImages` and `clearStore` usage!!
+   */
   componentDidMount() {
-    // Remove expired images
-    //OfflineImageStore.removeExpiredImages();
-
     // Clean all the images
-    //OfflineImageStore.clearStore();
+
+    // OfflineImageStore.clearStore(() => {
+    //   console.log('Hurray!! clearStore completed callback called');
+    // });
   }
 
   render() {
@@ -58,6 +63,22 @@ export default class App extends React.Component {
         />
       );
     }
+    if(this.state.reStoreCompleted && !this.state.loadImages) {
+      return (
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={
+              () => {
+              this.setState({
+                loadImages: true
+              })}
+            }>
+            <Text>Click to Load Images!</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Text>React native offline image</Text>

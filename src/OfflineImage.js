@@ -24,7 +24,7 @@ class OfflineImage extends React.Component {
    */
   handler = (path) => {
     console.log('Comp: handler', path);
-    this.setState({ path });
+    this.setState({ path: path });
   };
 
   componentWillMount() {
@@ -60,7 +60,7 @@ class OfflineImage extends React.Component {
         sourceImage = {
           uri: FILE_PREFIX + this.state.path,
         };
-      } else if (fallbackSource) { // Show fallback image until we download actual image
+      } else if (fallbackSource) { // Show fallback image until we download actual image if not able to download show fallback image only!
         sourceImage = fallbackSource;
       }
     }
