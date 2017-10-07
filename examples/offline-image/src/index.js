@@ -18,6 +18,7 @@ export default class App extends React.Component {
     OfflineImageStore.restore({
       name: 'My_Image_gallery',
       imageRemoveTimeout: 120, // expire image after 120 seconds, default is 3 days if you don't provide this property.
+      debugMode: true,
     }, () => {
       console.log('Restore completed and callback called !');
       // Restore completed!!
