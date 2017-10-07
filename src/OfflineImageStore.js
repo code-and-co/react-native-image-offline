@@ -9,6 +9,8 @@ const SHA1 = require('crypto-js/sha1');
  */
 class OfflineImageStore {
 
+  // TODOs
+  // A component should only subscribe only once
   constructor(name, storeImageTimeout) {
     if (!OfflineImageStore.instance) {
       OfflineImageStore.instance = this;
@@ -18,7 +20,8 @@ class OfflineImageStore {
         name,// Application should set their own application store name.
         // Offline Image removed after given time in seconds.
         // Default: 3 days
-        storeImageTimeout
+        storeImageTimeout,
+        debugMode: false,
       };
       // If it is `true` then we will remove expired images after given `storeImageTimeout`
       this.handlers = {};
@@ -53,9 +56,16 @@ class OfflineImageStore {
       this.store.storeImageTimeout = config.imageRemoveTimeout;
     }
 
+    if (config.debugMode === true) {
+      this.store.debugMode = true;
+    }
+
     // Restore existing entries:
     AsyncStorage.getItem(`@${this.store.name}:uris`, (err, uris) => { // On `getItems` completion
-      console.log('AsyncStorage.getItem DONE');
+
+      if (this.store.debugMode) {
+        console.log('Restored offline images entry dictionary');
+      }
       // Assign uris to entry list cache(`this.entries`)
       Object.assign(this.entries, JSON.parse(uris));
 
@@ -72,7 +82,9 @@ class OfflineImageStore {
     // Remove from offline store
     return RNFetchBlob.fs.unlink(this.getBaseDir())
       .then(() => { // On completion
-        console.log('Unlink complete store completed!');
+        if (this.store.debugMode) {
+          console.log('Removed offline image store completely!');
+        }
         // Empty all entries so that we should update offline Async storage
         this.entries = {};
 
@@ -81,7 +93,9 @@ class OfflineImageStore {
 
       })
       .catch((err) => {
-        console.log('unable to unlink store', err);
+        if (this.store.debugMode) {
+          console.log('unable to remove offline store', err);
+        }
       });
   };
 
@@ -111,8 +125,6 @@ class OfflineImageStore {
       this.handlers[uri].push(handler);
     }
 
-    console.log('Subscribed handlers for the uri:', uri, this.handlers[uri]);
-
     // Get the image if already exist else download and notify!
     this._getImage(source, reloadImage);
   };
@@ -131,12 +143,7 @@ class OfflineImageStore {
     uriList.forEach((uri) => {
       const createdPlusDaysDate = this._addTime(this.entries[uri].createdOn, this.store.storeImageTimeout);
       // Image created date + EXPIRED_AFTER_DAYS is < current Date, then remove the image
-      console.log('In _getExpiredImages createdPlusDaysDate', createdPlusDaysDate);
-      console.log('In _getExpiredImages', 'this.entries[uri].createdOn', this.entries[uri].createdOn);
-      console.log('this.store.storeImageTimeout', this.store.storeImageTimeout);
-
       if (createdPlusDaysDate < new Date()) {
-        console.log('remove image called on', uri);
         toBeRemovedImages.push(uri);
       }
     });
@@ -150,28 +157,33 @@ class OfflineImageStore {
   _removeExpiredImages = (onRestoreCompletion) => {
     const toBeRemovedImagePromises = [];
     const uriListToRemove = this._getExpiredImages();
-    console.log('uriListToRemove:', uriListToRemove);
+    if (this.store.debugMode) {
+      console.log('uris to remove from offline store', uriListToRemove);
+    }
     uriListToRemove.forEach((uri) => {
-      console.log('remove image called on', uri);
       // Remove image from cache
       const unlinkPromise = RNFetchBlob.fs.unlink(this.entries[uri].localUriPath)
         .then(() => {
-          console.log('remove image success', uri);
           // Delete entry from cache so that we should remove from offline Async storage
           delete this.entries[uri];
-          console.log('deleted uri, check its object exist?', this.entries[uri]);
         })
         .catch((err) => {
-          console.log('unable to remove image', err);
+          if (this.store.debugMode) {
+            console.log('unable to remove image', uri, err);
+          }
         });
       toBeRemovedImagePromises.push(unlinkPromise);
     });
 
     if (toBeRemovedImagePromises.length > 0) {
-      console.log('Found images to remove:');
+      if (this.store.debugMode) {
+        console.log('Found images to remove:');
+      }
       Promise.all(toBeRemovedImagePromises)
         .then((results) => {
-          console.log('removeExpiredImages completed callback');
+          if (this.store.debugMode) {
+            console.log('removeExpiredImages completed callback');
+          }
 
           // Update AsyncStorage with removed entries
           this._updateAsyncStorage(onRestoreCompletion);
@@ -180,8 +192,9 @@ class OfflineImageStore {
           //console.log('Promise.all', 'catch');
         });
     } else { // Nothing to remove so just trigger callback!
-      console.log('Not Found images to remove:');
-      console.log('Entries::', this.entries);
+      if (this.store.debugMode) {
+        console.log('No images to remove:');
+      }
       onRestoreCompletion();
     }
   };
@@ -190,10 +203,7 @@ class OfflineImageStore {
    * Update AsyncStorage with entries cache and trigger callback.
    */
   _updateAsyncStorage = (onRestoreCompletionCallback) => {
-    console.log('_updateAsyncStorage called', JSON.stringify(this.entries));
     AsyncStorage.setItem(`@${this.store.name}:uris`, JSON.stringify(this.entries), () => {
-      console.log('_updateAsyncStorage completed');
-      console.log('Entries::', this.entries);
       if (onRestoreCompletionCallback) {
         onRestoreCompletionCallback();
       }
@@ -202,17 +212,23 @@ class OfflineImageStore {
 
   getImageOfflinePath = (uri) => {
     if (this.entries[uri]) {
-      console.log('getImageOfflinePath, exist', this.entries[uri].localUriPath);
+      if (this.store.debugMode) {
+        console.log('Image exist offline', this.entries[uri].localUriPath);
+      }
       return this.entries[uri].localUriPath;
     }
-    console.log('getImageOfflinePath, not exist');
+    if (this.store.debugMode) {
+      console.log('Image not exist offline', uri);
+    }
     return undefined;
   };
 
   _getImage = (source, reloadImage) => {
     // Image already exist
     if (this.entries[source.uri]) {
-      console.log('_getImage image exist', source.uri, reloadImage);
+      if (this.store.debugMode) {
+        console.log('Image exist offline', source.uri);
+      }
       // Notify subscribed handler
       this._notify(source.uri);
 
@@ -223,14 +239,14 @@ class OfflineImageStore {
       }
 
     } else { // First time request
-      console.log('_getImage image NOT exist', source.uri);
+      if (this.store.debugMode) {
+        console.log('Image not exist offline', source.uri);
+      }
       this._downloadImage(source);
     }
   };
 
   _downloadImage = (source) => {
-    console.log('_downloadImage called', source.uri);
-
     const method = source.method ? source.method : 'GET';
     const imageFilePath = this._getImageFilePath(source.uri);
     RNFetchBlob
@@ -239,22 +255,24 @@ class OfflineImageStore {
       })
       .fetch(method, source.uri, source.headers)
       .then(() => {
-        console.log('RNFetchBlob', 'success', source.uri);
         // Add entry to entry list!!
         this._addEntry(source.uri, imageFilePath);
         // Notify subscribed handler AND Persist entries to AsyncStorage for offline
         this._updateOfflineStore(source.uri).done();
       }).catch(() => {
-      console.log('RNFetchBlob', 'failure', imageFilePath, source.uri);
+      if (this.store.debugMode) {
+        console.log('Failed to download image', source.uri);
+      }
     });
   };
 
   _notify = (uri) => {
-    console.log('_notify', uri);
     const handlers = this.handlers[uri];
     if (handlers && handlers.length > 0) {
       handlers.forEach(handler => {
-        console.log('handler called,', uri);
+        if (this.store.debugMode) {
+          console.log('Notify handler called', uri);
+        }
         handler(this.entries[uri].localUriPath);
       });
     }
@@ -272,7 +290,6 @@ class OfflineImageStore {
   };
 
   _addEntry = (uri, imageFilePath) => {
-    console.log('_addEntry', uri, imageFilePath);
     // Save Downloaded date when image downloads for first time
     if (this.entries[uri] === undefined) {
       this.entries[uri] = {
@@ -289,15 +306,15 @@ class OfflineImageStore {
   };
 
   _updateOfflineStore = async (uri) => {
-    console.log('_updateOfflineStore', uri);
     try {
       await AsyncStorage.setItem(`@${this.store.name}:uris`, JSON.stringify(this.entries));
       // Notify subscribed handler
       this._notify(uri);
-      console.log('After _updateOfflineStore and now entries::', this.entries);
     } catch (error) {
-      // Error saving data
-      console.log('_updateOfflineStore Failed', error);
+      if (this.store.debugMode) {
+        // Error saving data
+        console.log(' Offline image entry update failed', error);
+      }
     }
   };
 

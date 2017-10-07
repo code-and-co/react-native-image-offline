@@ -90,6 +90,7 @@ export default class App extends React.Component {
           source={ { uri: 'https://wrong-url/noImageExist.jpg' } }/>
         <OfflineImage
           resizeMode={'cover'}
+          fallbackSource={ Images.fallbackSource }
           style={ { width: '99%', height: 110, margin: 5 } }
           source={ { uri: 'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg' } }/>
         <OfflineImage
@@ -102,6 +103,7 @@ export default class App extends React.Component {
           source={ { uri: 'https://wallpaperbrowse.com/media/images/mobileswall-043.jpg' } }/>
         <OfflineImage
           resizeMode={'cover'}
+          fallbackSource={ Images.fallbackSource }
           style={ { width: '99%', height: 110, margin: 5 } }
           source={ { uri: 'https://wallpaperbrowse.com/media/images/butterfly-wallpaper_SzlKJB8.jpeg' } }/>
       </View>

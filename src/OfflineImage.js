@@ -23,7 +23,6 @@ class OfflineImage extends React.Component {
    * Callback function triggered after image downloaded or if already exist in offline store
    */
   handler = (path) => {
-    console.log('Comp: handler', path);
     this.setState({ path: path });
   };
 
@@ -45,7 +44,6 @@ class OfflineImage extends React.Component {
 
       // Subscribe so that we can re-render once image downloaded!
       offlineImageStore.subscribe(source, this.handler, reloadImage);
-      console.log('Comp: Subscribe', source);
     }
   }
 
@@ -64,8 +62,6 @@ class OfflineImage extends React.Component {
         sourceImage = fallbackSource;
       }
     }
-
-    console.log('Render: sourceImage', sourceImage);
 
     const componentProps = {
       ...this.props,
