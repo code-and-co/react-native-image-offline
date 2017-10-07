@@ -23,10 +23,9 @@ This library depends on **react-native-fetch-blob**. Refer [here](https://github
 
 `$ npm install react-native-image-offline --save`
 
-## Example
-
 
 ## Usage
+![ScreenShot](https://raw.githubusercontent.com/code-and-co/react-native-image-offline/master/screenshot.png)
 
 ##### `restore`
 To use this library, first and foremost important is to call the `restore` function so that you can get the completion status back. See the basic example usage.
@@ -175,3 +174,6 @@ OfflineImageStore.clearStore(() => {
 ```  
 
 ## Development/Contributions
+
+#### Credits
+Thanks to [https://wallpaperbrowse.com/](https://wallpaperbrowse.com/) and these image uris are only used in sample example application.
