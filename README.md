@@ -25,7 +25,7 @@ This library depends on **react-native-fetch-blob**. Refer [here](https://github
 
 
 ## Usage
-![ScreenShot](https://raw.githubusercontent.com/code-and-co/react-native-image-offline/master/screenshot.png =200x600)
+<img src="https://raw.githubusercontent.com/code-and-co/react-native-image-offline/master/screenshot.png" style="width: 200px;height: 600px"/>
 
 ##### `restore`
 To use this library, first and foremost important is to call the `restore` function so that you can get the completion status back. See the basic example usage.
