@@ -235,6 +235,9 @@ class OfflineImageStore {
       // Reload image:
       // Update existing image in offline store as server side image could have updated!
       if (reloadImage) {
+        if (this.store.debugMode) {
+          console.log('reloadImage is set to true for uri:', source.uri);
+        }
         this._downloadImage(source);
       }
 

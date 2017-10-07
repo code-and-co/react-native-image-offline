@@ -89,6 +89,7 @@ export default class App extends React.Component {
           fallbackSource={ Images.fallbackSource }
           source={ { uri: 'https://wrong-url/noImageExist.jpg' } }/>
         <OfflineImage
+          reloadImage = { true }
           resizeMode={'cover'}
           fallbackSource={ Images.fallbackSource }
           style={ { width: '99%', height: 110, margin: 5 } }
@@ -110,29 +111,6 @@ export default class App extends React.Component {
     );
   }
 }
-
-//const createOfflineImageViewRow = (uri, i) => <OfflineImageView key={ i } uri={ uri }/>;
-//
-// const OfflineImageView = React.createClass({
-//   render: function () {
-//     return (
-//       <View>
-//         <OfflineImage
-//           style={ { width: width, height: 50 } }
-//           fallbackSource={ Images.fallbackSource }
-//           source={ { uri: this.props.uri } }/>
-//       </View>
-//     );
-//   }
-// });
-//
-// var images = [
-//   'https://wallpaperbrowse.com/media/images/mobileswall-047.jpg',
-//   'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg',
-//   'https://wallpaperbrowse.com/media/images/tvrcnkbcgeirbxcmsbfz.jpg',
-//   'https://wallpaperbrowse.com/media/images/download_ZNNDLIt.jpg',
-//   'https://wallpaperbrowse.com/media/images/butterfly-wallpaper_SzlKJB8.jpeg'
-// ];
 
 const styles = StyleSheet.create({
   scrollView: {
