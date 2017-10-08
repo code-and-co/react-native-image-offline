@@ -14,6 +14,7 @@ This library depends on **react-native-fetch-blob**. Refer [here](https://github
 
 
 ## Installation
+This library has a dependency with `react-native-fetch-blob`, please refer to their [installation instructions](https://github.com/wkh237/react-native-fetch-blob#user-content-installation)
 
 **Using yarn**
 
