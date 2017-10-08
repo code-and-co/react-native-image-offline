@@ -9,7 +9,7 @@ This library depends on **react-native-fetch-blob**. Refer [here](https://github
 * Automatically remove expired images from offline store.
 * Supports fallback source static image. This will be shown if source object has 'uri' but unable to download image or it does not exist in offline store.
 * You can use custom Image component.
-* You can always reload the image by you specifying the `reloadImage={true}` irrespective of the image already available in offline store.
+* You can always reload the image by you specifying the `reloadImage={true}` irrespective of the image already available in offline store, so that you can refresh/load latest updated images.
 * Able to clear the offline store
 
 
@@ -138,6 +138,31 @@ componentWillMount() {
           );
       }
   }
+```
+
+### `preload`
+Recommended approach to preload images is to call after `restore`. You could call this method anywhere from the code. For instance, this library can be used with `redux-observable`, here is the code snippet!
+
+```
+const loadShoppingCartEpic = (action$, store, { getJSON }) =>
+  action$.ofType(LOAD_SHOPPING_CART)
+    .flatMap(action => {
+        return getJSON(`${API_BASE_URL}/api/cart`)
+                .map(res =>  {
+                    if (res.metadata.code === 200) {
+                        // Preload image after successful response 
+                        // These images download and persist offline.
+                        OfflineImageStore.preLoad([
+                          'res.content.image1.link',
+                          'res.content.image2.link',
+                        ]);
+                        return loadShoppingCartSuccess(res.content);
+                    } else { 
+                        return loadShoppingCartFailure();
+                    }
+                })
+                ._catch(error => Observable.of(loadShoppingCartFailure));
+    })
 ```
 
 ### OfflineImage with static source 
