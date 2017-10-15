@@ -1,16 +1,16 @@
 # react-native-image-offline
 
-React Native library for offline image store. It works for both Android and iOS. This library provides most of the capabilities for an application to show images in the offline view!
-This library depends on **react-native-fetch-blob**. Refer [here](https://github.com/wkh237/react-native-fetch-blob) for more details about the library.
+React Native library for iOS and Android offline image storage. This library provides most of the capabilities for an application to display pre-loaded images when offline.
+This library has a dependency on **react-native-fetch-blob**. Refer [here](https://github.com/wkh237/react-native-fetch-blob) for more details about the library.
 
 ## Features
 * Define your own offline store name!
-* Pre load the images
+* Pre load the images.
 * Automatically remove expired images from offline store.
 * Supports fallback source static image. This will be shown if source object has 'uri' but unable to download image or it does not exist in offline store.
-* You can use custom Image component.
-* You can always reload the image by you specifying the `reloadImage={true}` irrespective of the image already available in offline store, so that you can refresh/load latest updated images.
-* Able to clear the offline store
+* Use custom Image components.
+* You can always re-fetch the image by you specifying the `reloadImage={true}` irrespective of the image already being stored offline, this way you can refresh/load the most recently updated images.
+* Option to clear offline storage.
 
 
 ## Installation
@@ -29,7 +29,7 @@ This library has a dependency with `react-native-fetch-blob`, please refer to th
 <img src="https://raw.githubusercontent.com/code-and-co/react-native-image-offline/master/screenshot.png" width="300" height="500"/>
 
 ##### `restore`
-To use this library, first and foremost important is to call the `restore` function so that you can get the completion status back. See the basic example usage.
+First and foremeost, to use this library is important to call the `restore` function so that you can get the completion status back. See the basic example usage.
 
 `OfflineImageStore.restore({}, () => {})`
 
@@ -142,7 +142,7 @@ componentWillMount() {
 ```
 
 ### `preload`
-Recommended approach to preload images is to call after `restore`. You could call this method anywhere from the code. For instance, this library can be used with `redux-observable`, here is the code snippet!
+The recommended approach to preload images is to call after `restore`. You could call this method anywhere from the code. For instance, this library can be used with `redux-observable`, here is the code snippet!
 
 ```
 const loadShoppingCartEpic = (action$, store, { getJSON }) =>
