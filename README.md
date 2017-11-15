@@ -20,6 +20,8 @@ This library has a dependency on `react-native-fetch-blob`, please refer to thei
 
 `$ yarn add react-native-image-offline`
 
+Note: Do not forget to run `react-native link` after adding `react-native-fetch-blob` dependency.
+
 **Using npm**
 
 `$ npm install react-native-image-offline --save`
