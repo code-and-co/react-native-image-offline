@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-offline",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "src/index.js",
   "repository": "https://github.com/code-and-co/react-native-image-offline.git",
   "author": "code&co.",

@@ -17,6 +17,8 @@ class OfflineImage extends React.Component {
     this.state = {
       path: undefined,
     };
+
+    this.handler = this.handler.bind(this);
   }
 
   /**
@@ -25,6 +27,14 @@ class OfflineImage extends React.Component {
   handler = (path) => {
     this.setState({ path: path });
   };
+
+  componentWillUnmount(){
+    const { source } = this.props;
+    if (source.uri) {
+      // Subscribe so that we can re-render once image downloaded!
+      offlineImageStore.unsubscribe(source, this.handler);
+    }
+  }
 
   componentWillMount() {
     /**

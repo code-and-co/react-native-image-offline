@@ -129,6 +129,15 @@ class OfflineImageStore {
     this._getImage(source, reloadImage);
   };
 
+  // Un subscribe all the handlers for the given source uri
+  unsubscribe = async (source) => {
+    const { uri } = source;
+
+    if (this.handlers[uri]) {
+      delete this.handlers[uri];
+    }
+  };
+
   /**
    * Check whether given uri already exist in our offline cache!
    * @param uri uri to check in offline cache list
