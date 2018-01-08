@@ -199,6 +199,10 @@ class OfflineImageStore {
         })
         .catch((e) => {
           //console.log('Promise.all', 'catch');
+          if (this.store.debugMode) {
+              console.log('removeExpiredImages error');
+          }
+          onRestoreCompletion();
         });
     } else { // Nothing to remove so just trigger callback!
       if (this.store.debugMode) {
