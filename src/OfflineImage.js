@@ -28,6 +28,10 @@ class OfflineImage extends React.Component {
     this.setState({ path: path });
   };
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.path !== nextState.path;
+  }
+
   componentWillUnmount(){
     const { source } = this.props;
     if (source.uri) {
