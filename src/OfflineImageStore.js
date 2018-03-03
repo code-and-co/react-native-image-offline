@@ -270,6 +270,8 @@ class OfflineImageStore {
           }
           this._downloadImage(source);
         }
+      } else {
+        this._downloadImage(source);
       }
       return;
     }
