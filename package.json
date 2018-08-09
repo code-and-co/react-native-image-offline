@@ -20,7 +20,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-fetch-blob": "0.10.*"
+    "rn-fetch-blob": "0.10.*"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1"

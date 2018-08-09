@@ -7,7 +7,7 @@ import { concat } from 'rxjs/add/observable/concat';
 import { flatMap, mergeMap } from 'rxjs/add/operator/mergeMap';
 import { map } from 'rxjs/add/operator/map';
 import { _catch } from 'rxjs/add/operator/catch';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import OFFLINE_IMAGES from './constants';
 
 import { downloadImageOfflineFailure, downloadImageOfflineNetworkError, downloadImageOfflineSuccess } from './actions';

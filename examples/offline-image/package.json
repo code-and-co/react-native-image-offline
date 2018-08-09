@@ -16,8 +16,8 @@
   "dependencies": {
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.0",
-    "react-native-fetch-blob": "^0.10.8",
-    "react-native-image-offline": "file:../.."
+    "react-native-image-offline": "file:../..",
+    "rn-fetch-blob": "^0.10.12"
   },
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",
