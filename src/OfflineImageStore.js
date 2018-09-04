@@ -309,7 +309,7 @@ class OfflineImageStore {
         if (this.store.debugMode) {
           console.log('Notify handler called', uri);
         }
-        handler(this.entries[uri].basePath + '/' + this.entries[uri].localUriPath);
+        handler(uri, this.entries[uri].basePath + '/' + this.entries[uri].localUriPath);
       });
     }
   };

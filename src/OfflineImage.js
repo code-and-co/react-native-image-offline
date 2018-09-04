@@ -24,8 +24,14 @@ class OfflineImage extends React.Component {
   /**
    * Callback function triggered after image downloaded or if already exist in offline store
    */
-  handler = (path) => {
-    this.setState({ path: path });
+  handler = (sourceUri, path) => {
+    const { onLoadEnd, source } = this.props;
+    if (source && source.uri && source.uri === sourceUri) {
+      this.setState({ path: path });
+      if (path && onLoadEnd) {
+        onLoadEnd(sourceUri);
+      }
+    }
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -113,6 +119,7 @@ OfflineImage.propTypes = {
   //fallbackSource: PropTypes.int,
   component: PropTypes.func,
   reloadImage: PropTypes.bool,
+  onLoadEnd: PropTypes.func,
 };
 
 export default OfflineImage;

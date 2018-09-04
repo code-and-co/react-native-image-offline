@@ -114,29 +114,46 @@ componentWillMount() {
             <View style={styles.container}>
               <Text>React native offline image</Text>
               <OfflineImage
-                resizeMode={'center'}
-                style={ { width: '99%', height: 110, margin: 5 } }
-                fallbackSource={ Images.fallbackSource }
-                source={ { uri: 'https://wrong-url/noImageExist.jpg' } }/>
-              <OfflineImage
-                reloadImage = { true }
-                resizeMode={'cover'}
-                fallbackSource={ Images.fallbackSource }
-                style={ { width: '99%', height: 110, margin: 5 } }
-                source={ { uri: 'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg' } }/>
-              <OfflineImage
-                resizeMode={'cover'}
-                style={ { width: '99%', height: 110, margin: 5 } }
-                source={ { uri: 'https://wallpaperbrowse.com/media/images/tvrcnkbcgeirbxcmsbfz.jpg' } }/>
-              <OfflineImage
-                resizeMode={'cover'}
-                style={ { width: '99%', height: 110, margin: 5 } }
-                source={ { uri: 'https://wallpaperbrowse.com/media/images/mobileswall-043.jpg' } }/>
-              <OfflineImage
-                resizeMode={'cover'}
-                fallbackSource={ Images.fallbackSource }
-                style={ { width: '99%', height: 110, margin: 5 } }
-                source={ { uri: 'https://wallpaperbrowse.com/media/images/butterfly-wallpaper_SzlKJB8.jpeg' } }/>
+                        key={'https://wrong-url/noImageExist.jpg'}
+                        resizeMode={'center'}
+                        style={ { width: '99%', height: 110, margin: 5 } }
+                        fallbackSource={ Images.fallbackSource }
+                        source={ { uri: 'https://wrong-url/noImageExist.jpg' } }/>
+                      <OfflineImage
+                        key={'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg'}
+                        onLoadEnd={(sourceUri) => {
+                          console.log('Loading finished for image with path: ', sourceUri)
+                        }}
+                        reloadImage = { true }
+                        resizeMode={'cover'}
+                        fallbackSource={ Images.fallbackSource }
+                        style={ { width: '99%', height: 110, margin: 5 } }
+                        source={ { uri: 'https://wallpaperbrowse.com/media/images/wallpaper-for-mobile-13.jpg' } }/>
+                      <OfflineImage
+                        key={'https://wallpaperbrowse.com/media/images/tvrcnkbcgeirbxcmsbfz.jpg'}
+                        onLoadEnd={(sourceUri) => {
+                          console.log('Loading finished for image with path: ', sourceUri)
+                        }}
+                        resizeMode={'cover'}
+                        style={ { width: '99%', height: 110, margin: 5 } }
+                        source={ { uri: 'https://wallpaperbrowse.com/media/images/tvrcnkbcgeirbxcmsbfz.jpg' } }/>
+                      <OfflineImage
+                        key={'https://wallpaperbrowse.com/media/images/mobileswall-043.jpg'}
+                        onLoadEnd={(sourceUri) => {
+                          console.log('Loading finished for image with path: ', sourceUri)
+                        }}
+                        resizeMode={'cover'}
+                        style={ { width: '99%', height: 110, margin: 5 } }
+                        source={ { uri: 'https://wallpaperbrowse.com/media/images/mobileswall-043.jpg' } }/>
+                      <OfflineImage
+                        key={'https://wallpaperbrowse.com/media/images/butterfly-wallpaper_SzlKJB8.jpeg'}
+                        onLoadEnd={(sourceUri) => {
+                          console.log('Loading finished for image with path: ', sourceUri)
+                        }}
+                        resizeMode={'cover'}
+                        fallbackSource={ Images.fallbackSource }
+                        style={ { width: '99%', height: 110, margin: 5 } }
+                        source={ { uri: 'https://wallpaperbrowse.com/media/images/butterfly-wallpaper_SzlKJB8.jpeg' } }/>
             </View>
           );
       }

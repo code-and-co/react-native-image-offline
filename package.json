@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-offline",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "src/index.js",
   "repository": "https://github.com/code-and-co/react-native-image-offline.git",
   "author": "code&co.",
@@ -15,6 +15,10 @@
     {
       "name": "Jayasagar Jagirapu",
       "email": "jay@codeandco.com"
+    },
+    {
+      "name": "Dan Bender",
+      "email": "dan@codeandco.com"
     }
   ],
   "peerDependencies": {
