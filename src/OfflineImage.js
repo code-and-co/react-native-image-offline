@@ -37,6 +37,12 @@ class OfflineImage extends React.Component {
     const reloadImage = nextProps.reloadImage;
 
     const source = this.props.source;
+    // new source is from local storage, no need to cache
+    if (nextSource && nextSource.uri.includes('file:///')) {
+      this.setState({path: nextSource.uri})
+      return
+    }
+    // new source is from internet, download and cache it
     if (nextSource && source && nextSource.uri !== source.uri){
       const offlinePath = offlineImageStore.getImageOfflinePath(nextSource.uri);
       this.setState({ path: offlinePath });
