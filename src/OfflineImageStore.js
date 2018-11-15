@@ -86,7 +86,8 @@ class OfflineImageStore {
           console.log('Removed offline image store completely!');
         }
         // Empty all entries so that we should update offline Async storage
-        this.entries = {};
+        Object.keys(this.entries).forEach(key => delete this.entries[key]);
+
 
         // Update offline Async storage
         this._updateAsyncStorage(onRestoreCompletion);
