@@ -91,7 +91,7 @@ class OfflineImageStore {
 
         // Update offline Async storage
         this._updateAsyncStorage(onRestoreCompletion);
-
+        return null;
       })
       .catch((err) => {
         if (this.store.debugMode) {
@@ -207,6 +207,7 @@ class OfflineImageStore {
 
           // Update AsyncStorage with removed entries
           this._updateAsyncStorage(onRestoreCompletion);
+          return null;
         })
         .catch((e) => {
           //console.log('Promise.all', 'catch');
@@ -296,6 +297,7 @@ class OfflineImageStore {
         this._addEntry(source.uri, imageFilePath);
         // Notify subscribed handler AND Persist entries to AsyncStorage for offline
         this._updateOfflineStore(source.uri).done();
+        return null;
       }).catch(() => {
       if (this.store.debugMode) {
         console.log('Failed to download image', source.uri);
