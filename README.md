@@ -213,8 +213,9 @@ You can use a fallback image as a default image to show when unable to download 
 You can clear complete offline store at any point of time using 
 ```
 // Clean all the images
-OfflineImageStore.clearStore(() => {
-    console.log('Hurray!! clearStore completed callback called');
+OfflineImageStore.clearStore((err) => {
+    if (!err)
+      console.log('Hurray!! clearStore completed callback called');
 });
 ```  
 
