@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-offline",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "src/index.js",
   "repository": "https://github.com/code-and-co/react-native-image-offline.git",
   "author": "code&co.",
@@ -10,16 +10,6 @@
     "image offline",
     "image persist",
     "image cache"
-  ],
-  "contributors": [
-    {
-      "name": "Jayasagar Jagirapu",
-      "email": "jay@codeandco.com"
-    },
-    {
-      "name": "Dan Bender",
-      "email": "dan@codeandco.com"
-    }
   ],
   "peerDependencies": {
     "react": "*",
