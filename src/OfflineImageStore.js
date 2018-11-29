@@ -79,8 +79,17 @@ class OfflineImageStore {
    * Removes all the images in the offline store.
    */
   clearStore = (onRestoreCompletion) => {
-    // Remove from offline store
-    return RNFetchBlob.fs.unlink(this.getBaseDir())
+
+    // Check if the folder exists
+    return RNFetchBlob.fs.exists(this.getBaseDir())
+      .then((exists) => {
+        // If folder does not exists, no need to unlink it
+        if (!exists)
+          return;
+
+        // Remove from offline store
+        return RNFetchBlob.fs.unlink(this.getBaseDir())
+      })
       .then(() => { // On completion
         if (this.store.debugMode) {
           console.log('Removed offline image store completely!');
@@ -97,6 +106,9 @@ class OfflineImageStore {
         if (this.store.debugMode) {
           console.log('unable to remove offline store', err);
         }
+
+        // Call callback with the error
+        onRestoreCompletion(err);
       });
   };
 
