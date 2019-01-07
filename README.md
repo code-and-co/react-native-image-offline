@@ -94,7 +94,7 @@ componentWillMount() {
       ]);
     });
   }
-  
+
   render() {
       if (!this.state.reStoreCompleted) {
         return (
@@ -170,14 +170,14 @@ const loadShoppingCartEpic = (action$, store, { getJSON }) =>
         return getJSON(`${API_BASE_URL}/api/cart`)
                 .map(res =>  {
                     if (res.metadata.code === 200) {
-                        // Preload image after successful response 
+                        // Preload image after successful response
                         // These images download and persist offline.
                         OfflineImageStore.preLoad([
                           'res.content.image1.link',
                           'res.content.image2.link',
                         ]);
                         return loadShoppingCartSuccess(res.content);
-                    } else { 
+                    } else {
                         return loadShoppingCartFailure();
                     }
                 })
@@ -185,18 +185,18 @@ const loadShoppingCartEpic = (action$, store, { getJSON }) =>
     })
 ```
 
-### OfflineImage with static source 
+### OfflineImage with static source
 ```
 <OfflineImage component={ ImageBackground }
                         style={ [styles.swiperBackgroundImg, { width: this.props.width }] }
                         resizeMode="cover"
                         source={ require('../../../assets/images/placeholder/placeholder.png') }>
-<View>...</View>  
+<View>...</View>
 </OfflineImage>
 
 ```
 
-### OfflineImage with fallback/placeholder image 
+### OfflineImage with fallback/placeholder image
 You can use a fallback image as a default image to show when unable to download the image or if the image not available in the offline storage.
 ```
 <OfflineImage component={ ImageBackground }
@@ -204,20 +204,21 @@ You can use a fallback image as a default image to show when unable to download 
                         resizeMode="cover"
                         fallbackSource={ require('../../../assets/images/placeholder/placeholder.png') }
                         source={ { uri: this.props.shoppingCartItem.image.link } }>
-<View>...</View>  
+<View>...</View>
 </OfflineImage>
 
 ```
 
 ### Clear offline store
-You can clear complete offline store at any point of time using 
+You can clear complete offline store at any point of time using
 ```
 // Clean all the images
 OfflineImageStore.clearStore((err) => {
-    if (!err)
+    if (!err) {
       console.log('Hurray!! clearStore completed callback called');
+    }
 });
-```  
+```
 
 ## Development/Contributions
 

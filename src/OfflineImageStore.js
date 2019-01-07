@@ -84,9 +84,9 @@ class OfflineImageStore {
     return RNFetchBlob.fs.exists(this.getBaseDir())
       .then((exists) => {
         // If folder does not exists, no need to unlink it
-        if (!exists)
+        if (!exists) {
           return;
-
+        }
         // Remove from offline store
         return RNFetchBlob.fs.unlink(this.getBaseDir())
       })
@@ -96,7 +96,6 @@ class OfflineImageStore {
         }
         // Empty all entries so that we should update offline Async storage
         Object.keys(this.entries).forEach(key => delete this.entries[key]);
-
 
         // Update offline Async storage
         this._updateAsyncStorage(onRestoreCompletion);
