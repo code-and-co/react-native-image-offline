@@ -11,6 +11,8 @@ class OfflineImageStore {
 
   // TODOs
   // A component should only subscribe only once
+  // Check necessities of using async functions instead of normal ones
+
   constructor(name, storeImageTimeout) {
     if (!OfflineImageStore.instance) {
       OfflineImageStore.instance = this;
@@ -220,12 +222,11 @@ class OfflineImageStore {
           this._updateAsyncStorage(onRestoreCompletion);
           return null;
         })
-        .catch((e) => {
-          //console.log('Promise.all', 'catch');
+        .catch((err) => {
           if (this.store.debugMode) {
               console.log('removeExpiredImages error');
           }
-          onRestoreCompletion();
+          onRestoreCompletion(err);
         });
     } else { // Nothing to remove so just trigger callback!
       if (this.store.debugMode) {
@@ -239,9 +240,9 @@ class OfflineImageStore {
    * Update AsyncStorage with entries cache and trigger callback.
    */
   _updateAsyncStorage = (onRestoreCompletionCallback) => {
-    AsyncStorage.setItem(`@${this.store.name}:uris`, JSON.stringify(this.entries), () => {
+    AsyncStorage.setItem(`@${this.store.name}:uris`, JSON.stringify(this.entries), (err) => {
       if (onRestoreCompletionCallback) {
-        onRestoreCompletionCallback();
+        err ? onRestoreCompletionCallback(err) : onRestoreCompletionCallback();
       }
     });
   };
