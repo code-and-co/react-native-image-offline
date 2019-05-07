@@ -35,7 +35,8 @@ class OfflineImage extends React.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.path !== nextState.path;
+    if (!nextState.path) return true
+    return this.state.path !== nextState.path || this.props.opacity !== nextProps.opacity;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,10 +44,10 @@ class OfflineImage extends React.Component {
     const reloadImage = nextProps.reloadImage;
 
     const source = this.props.source;
-    if (nextSource && source && nextSource.uri !== source.uri){
+    if (nextSource.uri !== source.uri){
+      offlineImageStore.subscribe(source, this.handler, reloadImage);
       const offlinePath = offlineImageStore.getImageOfflinePath(nextSource.uri);
       this.setState({ path: offlinePath });
-      offlineImageStore.subscribe(source, this.handler, reloadImage);
     }
   }
 
@@ -99,7 +100,7 @@ class OfflineImage extends React.Component {
 
     const componentProps = {
       ...this.props,
-      source: sourceImage
+      source: this.state.path ? sourceImage : source,
     };
 
     if (component) {
