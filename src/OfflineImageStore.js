@@ -11,6 +11,8 @@ class OfflineImageStore {
 
   // TODOs
   // A component should only subscribe only once
+  // Check necessities of using async functions instead of normal ones
+
   constructor(name, storeImageTimeout) {
     if (!OfflineImageStore.instance) {
       OfflineImageStore.instance = this;
@@ -82,11 +84,11 @@ class OfflineImageStore {
 
     // Check if the folder exists
     return RNFetchBlob.fs.exists(this.getBaseDir())
-      .then((exists) => {
+      .then((exists) => {
         // If folder does not exists, no need to unlink it
-        if (!exists)
+        if (!exists) {
           return;
-
+        }
         // Remove from offline store
         return RNFetchBlob.fs.unlink(this.getBaseDir())
       })
@@ -96,7 +98,6 @@ class OfflineImageStore {
         }
         // Empty all entries so that we should update offline Async storage
         Object.keys(this.entries).forEach(key => delete this.entries[key]);
-
 
         // Update offline Async storage
         this._updateAsyncStorage(onRestoreCompletion);
@@ -221,12 +222,11 @@ class OfflineImageStore {
           this._updateAsyncStorage(onRestoreCompletion);
           return null;
         })
-        .catch((e) => {
-          //console.log('Promise.all', 'catch');
+        .catch((err) => {
           if (this.store.debugMode) {
               console.log('removeExpiredImages error');
           }
-          onRestoreCompletion();
+          onRestoreCompletion(err);
         });
     } else { // Nothing to remove so just trigger callback!
       if (this.store.debugMode) {
@@ -240,9 +240,9 @@ class OfflineImageStore {
    * Update AsyncStorage with entries cache and trigger callback.
    */
   _updateAsyncStorage = (onRestoreCompletionCallback) => {
-    AsyncStorage.setItem(`@${this.store.name}:uris`, JSON.stringify(this.entries), () => {
+    AsyncStorage.setItem(`@${this.store.name}:uris`, JSON.stringify(this.entries), (err) => {
       if (onRestoreCompletionCallback) {
-        onRestoreCompletionCallback();
+        err ? onRestoreCompletionCallback(err) : onRestoreCompletionCallback();
       }
     });
   };
@@ -297,6 +297,7 @@ class OfflineImageStore {
   };
 
   _downloadImage = (source) => {
+    if (!source.uri) return
     const method = source.method ? source.method : 'GET';
     const imageFilePath = this._getImageFileName(source.uri);
     if (!imageFilePath) return
@@ -331,7 +332,7 @@ class OfflineImageStore {
   };
 
   _getImageFileName = (uri) => {
-    if (!uri) return
+    if (!uri || !uri.substring) return
     let path = uri.substring(uri.lastIndexOf('/'));
     path = path.indexOf('?') === -1 ? path : path.substring(path.lastIndexOf('.'), path.indexOf('?'));
     const imageExtension = path.indexOf('.') === -1 ? '.jpg' : path.substring(path.indexOf('.'));
