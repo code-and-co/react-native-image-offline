@@ -35,8 +35,9 @@ class OfflineImage extends React.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!nextState.path) return true
-    return this.state.path !== nextState.path || this.props.opacity !== nextProps.opacity;
+    return true
+    // if (!nextState.path) return true
+    // return this.state.path !== nextState.path || this.props.opacity !== nextProps.opacity;
   }
 
   componentWillReceiveProps(nextProps) {
