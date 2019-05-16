@@ -84,7 +84,7 @@ class OfflineImageStore {
 
     // Check if the folder exists
     return RNFetchBlob.fs.exists(this.getBaseDir())
-      .then((exists) => {
+      .then((exists) => {
         // If folder does not exists, no need to unlink it
         if (!exists) {
           return;
@@ -297,8 +297,10 @@ class OfflineImageStore {
   };
 
   _downloadImage = (source) => {
+    if (!source.uri) return
     const method = source.method ? source.method : 'GET';
     const imageFilePath = this._getImageFileName(source.uri);
+    if (!imageFilePath) return
     RNFetchBlob
       .config({
         path: this.getBaseDir() + '/' + imageFilePath
@@ -330,6 +332,7 @@ class OfflineImageStore {
   };
 
   _getImageFileName = (uri) => {
+    if (!uri || !uri.substring) return
     let path = uri.substring(uri.lastIndexOf('/'));
     path = path.indexOf('?') === -1 ? path : path.substring(path.lastIndexOf('.'), path.indexOf('?'));
     const imageExtension = path.indexOf('.') === -1 ? '.jpg' : path.substring(path.indexOf('.'));
