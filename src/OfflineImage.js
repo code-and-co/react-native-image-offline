@@ -34,6 +34,7 @@ class OfflineImage extends React.Component {
     }
   };
 
+  // FIXME : Get rid of return true and improve render component logic
   shouldComponentUpdate(nextProps, nextState) {
     return true
     // if (!nextState.path) return true
