@@ -34,20 +34,13 @@ class OfflineImage extends React.Component {
     }
   };
 
-  // FIXME : Get rid of return true and improve render component logic
-  shouldComponentUpdate(nextProps, nextState) {
-    return true
-    // if (!nextState.path) return true
-    // return this.state.path !== nextState.path || this.props.opacity !== nextProps.opacity;
-  }
+  componentDidMount(prevProps) {
+    const nextSource = prevProps.source;
+    const reloadImage = prevProps.reloadImage;
 
-  componentWillReceiveProps(nextProps) {
-    const nextSource = nextProps.source;
-    const reloadImage = nextProps.reloadImage;
-
-    const source = this.props.source;
-    if (nextSource.uri !== source.uri){
-      const offlinePath = offlineImageStore.getImageOfflinePath(nextSource.uri);
+    const { source } = this.props;
+    if (prevProps.uri !== source.uri){
+      const offlinePath = offlineImageStore.getImageOfflinePath(source.uri);
       this.setState({ path: offlinePath });
       offlineImageStore.subscribe(source, this.handler, reloadImage);
     }
@@ -61,7 +54,7 @@ class OfflineImage extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     /**
      * Always download and update image in offline store if 'reloadImage' === 'always', however
      * Case 1: Show offline image if already exist
