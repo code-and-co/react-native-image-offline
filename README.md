@@ -1,5 +1,7 @@
 # react-native-image-offline
 
+Note: This project is no longer maintained.
+
 React Native library for iOS and Android offline image storage. This library provides most of the capabilities for an application to display pre-loaded images when offline.
 (This library has a dependency on **rn-fetch-blob**. Refer [here](https://github.com/joltup/rn-fetch-blob) for more details about the library.)
 
